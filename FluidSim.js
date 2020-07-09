@@ -1,9 +1,10 @@
 class FluidCube {
-	constructor (size, diffusion, viscosity, dt){
+	constructor (size, diffusion, viscosity, dt, iter){
     this.size = size;
     this.dt = dt;
     this.diff = diffusion;
     this.visc = viscosity;
+		this.iter = iter;
 
     this.s = new Float32Array(size*size);
     this.density = new Float32Array(size*size);
@@ -16,17 +17,17 @@ class FluidCube {
     //this.Vz0 = new Float32Array();
 	}
 
-	IX(x, y, z){
+	IX(x, y){
 		//return ((x) + (y) * this.size + (z) * this.size * this.size);
 		return (x + y * this.size);
 	}
 
 
-	FluidCubeAddDensity(x, y, amount)	{
+	AddDensity(x, y, amount)	{
 	    this.density[this.IX(x, y)] += amount;
 	}
 
-	FluidCubeAddVelocity( x,y, amountX, amountY){
+	AddVelocity( x,y, amountX, amountY){
 
     var index = this.IX(x, y);
 
@@ -34,13 +35,14 @@ class FluidCube {
     this.Vy[index] += amountY;
 	}
 
-	diffuse (b, x, x0, diff,  dt, iter){
-    var a = dt * diff * (this.size - 2) * (this.size - 2);
-    this.lin_solve(b, x, x0, a, 1 + 6 * a, iter, this.size);
+	diffuse (b, x, x0, diff){
+    var a = this.dt * diff * (this.size - 2) * (this.size - 2);
+    this.lin_solve(b, x, x0, a, 1 + 6 * a);
 	}
 
-	project(velocX, velocY, p, div, iter, N)
-	{
+	project(velocX, velocY, p, div){
+		var iter = this.iter;
+		var N = this.size;
 	        for (var j = 1; j < N - 1; j++) {
 	            for (var i = 1; i < N - 1; i++) {
 	                div[this.IX(i, j)] = -0.5*(
@@ -52,9 +54,9 @@ class FluidCube {
 	            }
 	        }
 
-	    this.set_bnd(0, div, N);
-	    this.set_bnd(0, p, N);
-	    this.lin_solve(0, p, div, 1, 6, iter, N);
+	    this.set_bnd(0, div);
+	    this.set_bnd(0, p);
+	    this.lin_solve(0, p, div, 1, 6);
 
 
 	        for (var j = 1; j < N - 1; j++) {
@@ -67,12 +69,14 @@ class FluidCube {
 	            }
 	        }
 
-	    this.set_bnd(1, velocX, N);
-	    this.set_bnd(2, velocY, N);
+	    this.set_bnd(1, velocX);
+	    this.set_bnd(2, velocY);
 	}
 
-	advect(b, d, d0,  velocX, velocY, dt, N)
+	advect(b, d, d0,  velocX, velocY)
 {
+		var dt = this.dt;
+		var N = this.size;
     var i0, i1, j0, j1;
 
     var dtx = dt * (N - 2);
@@ -120,11 +124,13 @@ class FluidCube {
             }
         }
 
-    this.set_bnd(b, d, N);
+    this.set_bnd(b, d);
 }
 
 
-	lin_solve(b, x, x0, a, c, iter, N)	{
+	lin_solve(b, x, x0, a, c)	{
+		var iter = this.iter;
+		var N = this.size;
     var cRecip = 1.0 / c;
     for (var k = 0; k < iter; k++) {
             for (var j = 1; j < N - 1; j++) {
@@ -138,12 +144,12 @@ class FluidCube {
                            )) * cRecip;
                 }
             }
-        this.set_bnd(b, x, N);
+        this.set_bnd(b, x);
     }
 	}
 
-	set_bnd(b, x, N){
-
+	set_bnd(b, x){
+				var N = this.size;
         for(var i = 1; i < N - 1; i++) {
             x[this.IX(i, 0  )] = b == 2 ? -x[this.IX(i, 1  )] : x[this.IX(i, 1 )];
             x[this.IX(i, N-1)] = b == 2 ? -x[this.IX(i, N-2)] : x[this.IX(i, N-2)];
@@ -163,7 +169,7 @@ class FluidCube {
 
 		}
 
-		 FluidCubeStep()
+		 Step()
 		{
 		    var N          = this.size;
 		    var visc     = this.visc;
@@ -176,23 +182,18 @@ class FluidCube {
 		    var s       = this.s;
 		    var density = this.density;
 				var iter = 4;
-		    this.diffuse(1, Vx0, Vx, visc, dt, iter, N);
-		    this.diffuse(2, Vy0, Vy, visc, dt, iter, N);
+		    this.diffuse(1, Vx0, Vx, visc);
+		    this.diffuse(2, Vy0, Vy, visc);
 
-		    this.project(Vx0, Vy0, Vx, Vy, iter, N);
+		    this.project(Vx0, Vy0, Vx, Vy);
 
-		    this.advect(1, Vx, Vx0, Vx0, Vy0, dt, N);
-		    this.advect(2, Vy, Vy0, Vx0, Vy0, dt, N);
+		    this.advect(1, Vx, Vx0, Vx0, Vy0);
+		    this.advect(2, Vy, Vy0, Vx0, Vy0);
 
-		    this.project(Vx, Vy, Vx0, Vy0, iter, N);
+		    this.project(Vx, Vy, Vx0, Vy0);
 
-		    this.diffuse(0, s, density, diff, dt, iter, N);
-		    this.advect(0, density, s, Vx, Vy, dt, N);
-
-
-
-
-
+		    this.diffuse(0, s, density, diff);
+		    this.advect(0, density, s, Vx, Vy);
 		}
 
 
