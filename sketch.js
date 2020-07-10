@@ -13,7 +13,7 @@ function setup() {
   radio.option('Dots');
   radio.style('width', '120px');
 	radio.value('Default');
-	//frameRate(0.5);
+	//frameRate(0.5);//fror testing
 	ellipseMode(CORNER);
 }
 
