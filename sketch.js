@@ -1,4 +1,4 @@
-var res = 8;
+var res = 16;
 
 
 var fluidCube;
@@ -6,13 +6,15 @@ var fpsText;
 
 function setup() {
 	createCanvas(512, 512);
-	fluidCube = new FluidCube(512/res,0.00001,0.0000001,0.2,4);//0.0000001
+	fluidCube = new FluidCube(512/res,0.0001,0.0000001,0.2,4);//0.0000001
 	fpsText = createP('fps');
 	radio = createRadio();
   radio.option('Default');
   radio.option('Dots');
   radio.style('width', '120px');
 	radio.value('Default');
+	//frameRate(0.5);
+	ellipseMode(CORNER);
 }
 
 var t =0;
@@ -66,10 +68,14 @@ function draw() {
 				ellipse(i*res,j*res,r,r);
 			}
 			//render vel vectors
-			//stroke(220,0,150);
-			//var fluidVel = new p5.Vector(fluidCube.Vx[fluidCube.IX(i,j)],fluidCube.Vy[fluidCube.IX(i,j)])
-			//var len = 20;
-			//line(i*res,j*res,i*res+fluidVel.x*len,j*res+fluidVel.y*len);
+			stroke(220,0,150);
+			var hoff = res/2;
+			var voff = res/2;
+			var fluidVel = new p5.Vector(fluidCube.Vx[fluidCube.IX(i,j)],fluidCube.Vy[fluidCube.IX(i,j)])
+			var len = 20;
+			var x = i*res+hoff;
+			var y = j*res+voff;
+			line(x,y,x+fluidVel.x*len,y+fluidVel.y*len);
 		}
 	}
 
