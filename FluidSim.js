@@ -127,8 +127,11 @@ class FluidCube {
     this.set_bnd(b, d);
 }
 
-
-	lin_solve(b, x, x0, a, c)	{
+lin_solve(b, x, x0, a, c)	{
+	//this.Gauss_Seidel_lin_solve(b, x, x0, a, c);
+	this.Jacobi_lin_solve(b, x, x0, a, c);
+}
+	Gauss_Seidel_lin_solve(b, x, x0, a, c)	{  ///this.diffuse(0, s, density, diff);
 		var iter = this.iter;
 		var N = this.size;
     var cRecip = 1.0 / c;
@@ -146,6 +149,30 @@ class FluidCube {
             }
         this.set_bnd(b, x);
     }
+	}
+
+	Jacobi_lin_solve(b, x, x0, a, c)	{
+		var iter = this.iter;
+		var N = this.size;
+		var cRecip = 1.0 / c;
+		var temResult = new Float32Array(this.size*this.size); //copia el array no se si es necesario o deberia arrancar en 0, me parece que es lo mismo.
+		for (var k = 0; k < iter; k++) {
+						for (var j = 1; j < N - 1; j++) {
+								for (var i = 1; i < N - 1; i++) {
+										temResult[this.IX(i, j)] =
+																	 (x0[this.IX(i, j)]
+																+ a*(x[this.IX(i+1, j)]
+																		+x[this.IX(i-1, j)]
+																		+x[this.IX(i  , j+1)]
+																		+x[this.IX(i  , j-1)]
+													 )) * cRecip;
+								}
+						}
+
+				this.set_bnd(b, temResult);
+				copyArray(x,temResult,this.size*this.size);
+				//console.log(temResult);
+		}
 	}
 
 	set_bnd(b, x){
@@ -195,6 +222,22 @@ class FluidCube {
 		    this.diffuse(0, s, density, diff);
 		    this.advect(0, density, s, Vx, Vy);
 		}
+}
 
+function IsDiagonallyDominant(matrix, n){
+	result = true;
+	for (var j=0; j< n; j++){
+		var sum =0;
+		for (var i=0; i< n; i++){
+			if(i!=j) sum += matrix[i+j*n];
+		}
+		if(matrix[j+j*n] < sum) result = false;
+	}
+	return result;
+}
 
+function copyArray(a,b,len){
+	for (var i = 0; i<len;i++){
+		a[i] = b[i];
+	}
 }
