@@ -1,2 +1,2 @@
 # JSFluidSim
- JS RealTime Fluid Simpulation
+ JS Real Time Fluid Simulation.
