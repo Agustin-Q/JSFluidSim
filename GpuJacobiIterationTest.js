@@ -24,7 +24,7 @@ function JacobiIteration(gpgpUtility_)
     var fragmentShaderSource;
     var program;
 
-    fragmentShaderSource = getSourcefromURL("http://127.0.0.1:3000/myTextFile.frag");
+    fragmentShaderSource = getSourcefromURL("http://127.0.0.1:5500/myTextFile.frag");
     program            = gpgpUtility.createProgram(null, fragmentShaderSource); //crea el programa y lo linquea con std vertex shader y el fragment shader
     positionHandle     = gpgpUtility.getAttribLocation(program,  "position");
     gl.enableVertexAttribArray(positionHandle);

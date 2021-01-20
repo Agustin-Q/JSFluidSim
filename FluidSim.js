@@ -133,8 +133,8 @@ class FluidCube {
 
   lin_solve(b, x, x0, a, c) {
     //this.Gauss_Seidel_lin_solve(b, x, x0, a, c);
-    this.Jacobi_lin_solve(b, x, x0, a, c);
-		//this.Jacobi_lin_gpu_solve(b, x, x0, a, c)
+    //this.Jacobi_lin_solve(b, x, x0, a, c);
+		this.Jacobi_lin_gpu_solve(b, x, x0, a, c)
   }
   Gauss_Seidel_lin_solve(b, x, x0, a, c) { ///this.diffuse(0, s, density, diff);
     var iter = this.iter;
