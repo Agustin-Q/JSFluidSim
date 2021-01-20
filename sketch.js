@@ -32,9 +32,9 @@ function draw() {
   t += 0.01;
   vel.setMag(noise(t + 1000));
   fluidCube.AddVelocity(floor(512 / res /2),floor(512 / res /2),vel.x,vel.y);
-	console.time("step");
+	//console.time("step");
   fluidCube.Step();
-	console.timeEnd("step");
+	//console.timeEnd("step");
   maxloops--;
   loops++;
   if (maxloops < 0) {
