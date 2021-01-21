@@ -12,7 +12,7 @@
 
 
  This problem is ideal to parallelize using GPGPU compute as the grid like nature of the simulation matches perfectly with the task a GPU is built to do, calculate a gird of pixel values.
- My original intensions where to increase the performance over a single thread simulation (Spoiler alert: it runs slower...).
+ My original intention was to increase the performance over a single thread simulation (Spoiler alert: it runs slower...).
 
 ## Conclusion:
 
