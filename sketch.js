@@ -1,19 +1,27 @@
+
 var res = 8;
-
-
 var fluidCube;
 var fpsText;
 
 function setup() {
-  createCanvas(512, 512);
+  let canvas = createCanvas(512, 512);
+  canvas.parent('container')
   fluidCube = new FluidCube(512 / res, 0.00001, 0.000000001, 0.2, 4); //0.0000001
-  fpsText = createP('fps');
-  radio = createRadio();
+  let radio = createRadio();
+  radio.parent('renderType')
   radio.option('Default');
   radio.option('Dots');
   radio.style('width', '120px');
   radio.value('Default');
-  //frameRate(10); //fror testing
+  radio.changed(renderRadioChanged);
+  let computeRadio = createRadio();
+  computeRadio.parent('computeType')
+  computeRadio.option('CPU');
+  computeRadio.option('GPU');
+  computeRadio.style('width', '120px');
+  computeRadio.value('CPU');
+  computeRadio.changed(computeRadioChanged);
+
   ellipseMode(CORNER);
 }
 
@@ -21,6 +29,9 @@ var t = 0;
 var maxloops = 10;
 var loops = 0;
 var addonce = true;
+var renderDefalut = true;
+var renderDots = false;
+
 
 function draw() {
   background(0);
@@ -42,20 +53,8 @@ function draw() {
     //noLoop();
   }
 
-  var renderDefalut = false;
-  var renderDots = false;
-  if (radio.value() == "Default") {
-    renderDefalut = true;
-  } else {
-    renderDefalut = false;
-  }
 
-  if (radio.value() == "Dots") {
-    renderDots = true;
-  } else {
-    renderDots = false;
-  }
-
+  // render code.
   fill(0);
 
   for (var j = 0; j < height / res; j++) {
@@ -90,6 +89,23 @@ function draw() {
 
 
   if (frameCount % 6 == 0) { //update every 6 frames
-    fpsText.html(frameRate());
+    let fpsText = document.getElementById("fps");
+    fpsText.innerHTML = (nf(frameRate(),1,1));
   }
+}
+
+function renderRadioChanged(event){
+  let value = event.target.value;
+  if (value == "Default") {
+    renderDefalut = true;
+    renderDots = false;
+  } else if (value == "Dots"){
+    renderDefalut = false;
+    renderDots = true;
+  }
+}
+
+function computeRadioChanged(event){
+  let value = event.target.value;
+  fluidCube.setSolverType(value);
 }

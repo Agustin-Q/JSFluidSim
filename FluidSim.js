@@ -20,6 +20,8 @@ class FluidCube {
     this.Vx0 = new Float32Array(size * size);
     this.Vy0 = new Float32Array(size * size);
     //this.Vz0 = new Float32Array();
+
+    this.solverType = 'CPU';
   }
 
   IX(x, y) {
@@ -132,10 +134,16 @@ class FluidCube {
   }
 
   lin_solve(b, x, x0, a, c) {
-    //this.Gauss_Seidel_lin_solve(b, x, x0, a, c);
-    //this.Jacobi_lin_solve(b, x, x0, a, c);
-		this.Jacobi_lin_gpu_solve(b, x, x0, a, c)
+    
+    if(this.solverType == 'CPU'){
+      this.Jacobi_lin_solve(b, x, x0, a, c);
+    } else if (this.solverType == 'GPU'){
+      this.Jacobi_lin_gpu_solve(b, x, x0, a, c)
+    } else if (this.solverType == 'Gauss'){
+      this.Gauss_Seidel_lin_solve(b, x, x0, a, c);
+    }
   }
+
   Gauss_Seidel_lin_solve(b, x, x0, a, c) { ///this.diffuse(0, s, density, diff);
     var iter = this.iter;
     var N = this.size;
@@ -274,6 +282,13 @@ class FluidCube {
       }
     } else {
       alert("Floating point textures are not supported.");
+    }
+  }
+
+  setSolverType(type){
+    let possibleSettings = ['CPU', 'GPU', 'Gauss'];
+    if (possibleSettings.includes(type)){
+      this.solverType = type;
     }
   }
 
