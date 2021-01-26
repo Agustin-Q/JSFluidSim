@@ -11,14 +11,12 @@ function setup() {
   radio.parent('renderType')
   radio.option('Default');
   radio.option('Dots');
-  radio.style('width', '120px');
   radio.value('Default');
   radio.changed(renderRadioChanged);
   let computeRadio = createRadio();
   computeRadio.parent('computeType')
   computeRadio.option('CPU');
   computeRadio.option('GPU');
-  computeRadio.style('width', '120px');
   computeRadio.value('CPU');
   computeRadio.changed(computeRadioChanged);
 
@@ -26,33 +24,43 @@ function setup() {
 }
 
 var t = 0;
-var maxloops = 10;
-var loops = 0;
-var addonce = true;
 var renderDefalut = true;
 var renderDots = false;
 
 
 function draw() {
   background(0);
-  if (addonce) {
-    fluidCube.AddDensity(floor(512 / res / 2), floor(512 / res / 2), 30);
-    //addonce = false;
-  }
+
+  fluidCube.AddDensity(floor(512 / res / 2), floor(512 / res / 2), 30);
+
   var vel = p5.Vector.fromAngle(map(noise(t), 0, 1, 0, TWO_PI));
   t += 0.01;
   vel.setMag(noise(t + 1000));
   fluidCube.AddVelocity(floor(512 / res /2),floor(512 / res /2),vel.x,vel.y);
+  // codigo para que se mueva con el mouse, no anda
+  // let mx = mouseX;
+  // let my = mouseY;
+  // let padding = 8*4;
+  // if (mx > padding && mx < (512-padding) && my > padding && my<(512-padding)) {
+  //   let mouseVel = createVector(movedX, movedY);
+  //   mouseVel.mult(0.5);
+  //   mouseVel.limit(0.5);
+  //   fluidCube.AddVelocity(floor(mx / res),floor(my / res),0,-0.7);
+  //   console.log(`mx: ${mx}, my: ${my}, vx: ${mouseVel.x}, vy:${mouseVel.y}`)
+  // }
+
+  // if (isNaN(fluidCube.Vx[2080])){
+  //   console.log('falla');
+  //   noLoop();
+  // }
 	//console.time("step");
   fluidCube.Step();
 	//console.timeEnd("step");
-  maxloops--;
-  loops++;
-  if (maxloops < 0) {
-    //console.log("loops: " + loops);
-    //noLoop();
-  }
 
+
+  //-----------
+ 
+  
 
   // render code.
   fill(0);
