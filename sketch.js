@@ -1,4 +1,3 @@
-
 var res = 8;
 var fluidCube;
 var fpsText;
@@ -37,30 +36,8 @@ function draw() {
   t += 0.01;
   vel.setMag(noise(t + 1000));
   fluidCube.AddVelocity(floor(512 / res /2),floor(512 / res /2),vel.x,vel.y);
-  // codigo para que se mueva con el mouse, no anda
-  // let mx = mouseX;
-  // let my = mouseY;
-  // let padding = 8*4;
-  // if (mx > padding && mx < (512-padding) && my > padding && my<(512-padding)) {
-  //   let mouseVel = createVector(movedX, movedY);
-  //   mouseVel.mult(0.5);
-  //   mouseVel.limit(0.5);
-  //   fluidCube.AddVelocity(floor(mx / res),floor(my / res),0,-0.7);
-  //   console.log(`mx: ${mx}, my: ${my}, vx: ${mouseVel.x}, vy:${mouseVel.y}`)
-  // }
 
-  // if (isNaN(fluidCube.Vx[2080])){
-  //   console.log('falla');
-  //   noLoop();
-  // }
-	//console.time("step");
   fluidCube.Step();
-	//console.timeEnd("step");
-
-
-  //-----------
- 
-  
 
   // render code.
   fill(0);
