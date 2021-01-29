@@ -5,7 +5,12 @@ var fpsText;
 function setup() {
   let canvas = createCanvas(512, 512);
   canvas.parent('container')
-  fluidCube = new FluidCube(512 / res, 0.00001, 0.000000001, 0.2, 4); //0.0000001
+  fluidCube = new FluidCube(
+    512 / res,
+    0.000007, //diffusion, 0.00001
+    0.000000001, //viscosity, 0.000000001
+    0.2, // dt
+    4); // iterations
   let radio = createRadio();
   radio.parent('renderType')
   radio.option('Default');
@@ -32,7 +37,7 @@ function draw() {
 
   fluidCube.AddDensity(floor(512 / res / 2), floor(512 / res / 2), 30);
 
-  var vel = p5.Vector.fromAngle(map(noise(t), 0, 1, 0, TWO_PI));
+  var vel = p5.Vector.fromAngle(map(noise(t), 0.25, 0.75, 0, TWO_PI));
   t += 0.01;
   vel.setMag(noise(t + 1000));
   fluidCube.AddVelocity(floor(512 / res /2),floor(512 / res /2),vel.x,vel.y);
@@ -71,7 +76,7 @@ function draw() {
       // line(x,y,x+fluidVel.x*len,y+fluidVel.y*len);
     }
   }
-
+  drawBorders();
 
   if (frameCount % 6 == 0) { //update every 6 frames
     let fpsText = document.getElementById("fps");
@@ -93,4 +98,16 @@ function renderRadioChanged(event){
 function computeRadioChanged(event){
   let value = event.target.value;
   fluidCube.setSolverType(value);
+}
+
+function drawBorders(){
+  push();
+  fill(0);
+  noStroke();
+  rect(0,0,64*8,8);
+  rect(0,63*8,64*8,8);
+  rect(0,0,8,64*8);
+  rect(63*8,0,8,64*8);
+  pop();
+
 }

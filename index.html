@@ -21,22 +21,38 @@
 			margin:0;
 			padding:0;
 			overflow: hidden;
+			background-color: black;
+			color: wheat;
+			font-family: monospace;
 		}
+
+		.content{
+			width: min-content;
+			margin: auto;
+		}
+
+		h3{
+			text-align: center;
+			font-size: 2rem;
+		}
+
 		canvas {
 			margin:auto;
 		}
 	</style>
 </head>
 <body>
-	<h3>JSFluidSim</h3>
-	<div id="container"></div>
-	<p>FrameRate: <span id="fps"></span> FPS</p>
-	<p>Rendering type:</p>
-	<div id="renderType"></div>
-	<p>Compute type:</p>
-	<div id="computeType"></div>
-	<p>Note: For GPU Compute, web browser and GPU must support WebGL2 and floating point textures.</p>
-	<hr>
-	<p>See readme at <a href="https://github.com/Agustin-Q/JSFluidSim">https://github.com/Agustin-Q/JSFluidSim</a></p>
+  <div class="content">
+		<h3 >JSFluidSim</h3>
+		<div id="container"></div>
+		<p>FrameRate: <span id="fps"></span> FPS</p>
+		<p>Rendering type:</p>
+		<div id="renderType"></div>
+		<p>Compute type:</p>
+		<div id="computeType"></div>
+		<p>Note: For GPU Compute, web browser and GPU must support WebGL2 and floating point textures.</p>
+		<hr>
+		<p>See readme at <a href="https://github.com/Agustin-Q/JSFluidSim">https://github.com/Agustin-Q/JSFluidSim</a></p>
+	</div>
 </body>
 </html>
